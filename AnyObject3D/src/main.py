@@ -12,6 +12,7 @@ sys.path.append("3DFuse")
 from segment_anything import sam_model_registry, SamPredictor
 from lavis.models import load_model_and_preprocess
 
+import gc
 from mono_rec import (gen_pc_from_image, gen_3d)
 
 
@@ -81,10 +82,15 @@ def rec_from_image(imgname, point, keyword, random_seed):
             break
     text_prompt = keyword + ', ' + output[0] if len(text_prompt) == 0 else text_prompt
     print(keyword, ', ', text_prompt)
+    gc.collect()
+    torch.cuda.empty_cache()
     images, points = gen_pc_from_image(imgname, text_prompt, keyword, random_seed)
+    gc.collect()
+    torch.cuda.empty_cache()
     gen_3d(images, points, text_prompt, keyword, random_seed)
 
 if __name__ == '__main__':
+    # torch.cuda.set_per_process_memory_fraction(1.0,0)
     parser = argparse.ArgumentParser()
     parser.add_argument('--image', default=None, help="image name")
     parser.add_argument('--keyword', default=None, help="keyword")

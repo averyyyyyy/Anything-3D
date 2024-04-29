@@ -182,25 +182,52 @@ def point_e(device,exp_dir):
 
 
 def point_e_gradio(img,device):
+    #print(img)
+    import gc
     print('creating base model...')
-    base_name = 'base1B' # use base300M or base1B for better results
-    base_model = model_from_config(MODEL_CONFIGS[base_name], device)
+    base_name = 'base300M' # use base300M or base1B for better results
+    base_model = model_from_config(MODEL_CONFIGS[base_name], "cpu")
     base_model.eval()
     base_diffusion = diffusion_from_config(DIFFUSION_CONFIGS[base_name])
-
+    gc.collect()
+    torch.cuda.empty_cache()
     print('creating upsample model...')
-    upsampler_model = model_from_config(MODEL_CONFIGS['upsample'], device)
+    upsampler_model = model_from_config(MODEL_CONFIGS['upsample'], "cpu")
     upsampler_model.eval()
     upsampler_diffusion = diffusion_from_config(DIFFUSION_CONFIGS['upsample'])
-
+    gc.collect()
+    torch.cuda.empty_cache()
     print('downloading base checkpoint...')
-    base_model.load_state_dict(load_checkpoint(base_name, device))
-
+    base_model.load_state_dict(load_checkpoint(base_name, "cpu"))
+    gc.collect()
+    torch.cuda.empty_cache()
     print('downloading upsampler checkpoint...')
-    upsampler_model.load_state_dict(load_checkpoint('upsample', device))
-
+    upsampler_model.load_state_dict(load_checkpoint('upsample', "cpu"))
+    # gc.collect()
+    # torch.cuda.empty_cache()
+    # print(torch.cuda.memory_summary(device=None, abbreviated=False))
+    # base_model.time_embed = base_model.time_embed.cuda()
+    # base_model.ln_pre = base_model.ln_pre.cuda()
+    # base_model.backbone = base_model.backbone.cuda()
+    # base_model.ln_post = base_model.ln_post.cuda()
+    # base_model.input_proj = base_model.input_proj.cuda()
+    # base_model.output_proj = base_model.output_proj.cuda()
+    # base_model.clip.model = base_model.clip.model.cuda()
+    # base_model.clip_embed = base_model.clip_embed.cuda()
+    # print(torch.cuda.memory_summary(device=None, abbreviated=False))
+    # upsampler_model.time_embed = upsampler_model.time_embed.cuda()
+    # upsampler_model.ln_pre = upsampler_model.ln_pre.cuda()
+    # upsampler_model.backbone = upsampler_model.backbone.cuda()
+    # upsampler_model.ln_post = upsampler_model.ln_post.cuda()
+    # upsampler_model.input_proj = upsampler_model.input_proj.cuda()
+    # upsampler_model.output_proj = upsampler_model.output_proj.cuda()
+    # upsampler_model.clip.model = upsampler_model.clip.model.cuda()
+    # upsampler_model.clip_embed = upsampler_model.clip_embed.cuda()
+    # upsampler_model.cond_point_proj = upsampler_model.cond_point_proj.cuda()
+    # print(torch.cuda.memory_summary(device=None, abbreviated=False))
+    print("creating sampler")
     sampler = PointCloudSampler(
-        device=device,
+        device="cpu",
         models=[base_model, upsampler_model],
         diffusions=[base_diffusion, upsampler_diffusion],
         num_points=[1024, 4096 - 1024],
@@ -208,11 +235,31 @@ def point_e_gradio(img,device):
         guidance_scale=[3.0, 3.0],
     )
 
-
     samples = None
     for x in tqdm(sampler.sample_batch_progressive(batch_size=1, model_kwargs=dict(images=[img]))):
         samples = x
-        
+    print(len(samples))
     pc = sampler.output_to_point_clouds(samples)[0]
-    
+        # gc.collect()
+    # torch.cuda.empty_cache()
+    # print(torch.cuda.memory_summary(device=None, abbreviated=False))
+    # base_model.time_embed = base_model.time_embed.cuda()
+    # base_model.ln_pre = base_model.ln_pre.cuda()
+    # base_model.backbone = base_model.backbone.cuda()
+    # base_model.ln_post = base_model.ln_post.cuda()
+    # base_model.input_proj = base_model.input_proj.cuda()
+    # base_model.output_proj = base_model.output_proj.cuda()
+    # base_model.clip.model = base_model.clip.model.cuda()
+    # base_model.clip_embed = base_model.clip_embed.cuda()
+    # print(torch.cuda.memory_summary(device=None, abbreviated=False))
+    # upsampler_model.time_embed = upsampler_model.time_embed.cuda()
+    # upsampler_model.ln_pre = upsampler_model.ln_pre.cuda()
+    # upsampler_model.backbone = upsampler_model.backbone.cuda()
+    # upsampler_model.ln_post = upsampler_model.ln_post.cuda()
+    # upsampler_model.input_proj = upsampler_model.input_proj.cuda()
+    # upsampler_model.output_proj = upsampler_model.output_proj.cuda()
+    # upsampler_model.clip.model = upsampler_model.clip.model.cuda()
+    # upsampler_model.clip_embed = upsampler_model.clip_embed.cuda()
+    # upsampler_model.cond_point_proj = upsampler_model.cond_point_proj.cuda()
+    # print(torch.cuda.memory_summary(device=None, abbreviated=False))
     return pc

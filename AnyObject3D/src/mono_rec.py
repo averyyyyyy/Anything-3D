@@ -31,9 +31,9 @@ def gen_pc_from_image(imgname, prompt, keyword, seed, bg_preprocess=True):
         image = np.array(image)
         image[~mask] = [255., 255., 255.]
         image = Image.fromarray(image.astype(np.uint8))
-
-    points = point_e_gradio(image, 'cuda')
-
+    print("starting pc gen")
+    points = point_e_gradio(image, 'cuda') #cuda
+    print("end pc gen")
     images = [image]
     points = points
     return images, points

@@ -7,7 +7,8 @@ import numpy as np
 import torch 
 from PIL import Image
 import argparse
-
+import sys
+sys.path.append("3DFuse")
 from segment_anything import sam_model_registry, SamPredictor
 from lavis.models import load_model_and_preprocess
 

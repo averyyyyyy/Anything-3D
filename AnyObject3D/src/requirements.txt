@@ -12,24 +12,24 @@ open_clip_torch==2.0.2
 opencv_contrib_python==4.5.5.64
 opencv_python==4.5.5.64
 opencv_python_headless==4.5.5.64
-Pillow==9.0.1
+#Pillow==9.0.1
 Pillow==9.5.0
 plotly==5.14.1
 pydantic==1.9.2
-pytorch3d==0.7.2
+#torch3d
 pytorch_lightning==2.0.1
 PyYAML==6.0
 PyYAML==6.0
 safetensors==0.2.7
-salesforce_lavis==1.0.1
+salesforce_lavis
 scipy==1.9.1
 tabulate==0.9.0
 timm==0.4.12
-torch==1.11.0+cu113
-torchvision==0.12.0+cu113
+torch
+torchvision
 transformers==4.28.1
 xformers==0.0.20
 clip @ git+https://github.com/openai/CLIP.git
-segment_anything @ https://github.com/facebookresearch/segment-anything.git
-point_e @ https://github.com/openai/point-e.git
-lavis @ https://github.com/salesforce/LAVIS.git
+segment_anything @ git+https://github.com/facebookresearch/segment-anything.git
+point_e @ git+https://github.com/openai/point-e.git
+#lavis @ git+https://github.com/salesforce/LAVIS.git

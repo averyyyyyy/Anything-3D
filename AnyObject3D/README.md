@@ -17,7 +17,6 @@ Running Environment
    pip install -r 3DFuse/requirements.txt
    pip install -r requirements.txt
    ```
-Some dependencies need to be installed manually. Specifically, 
 Pretrained models 
    ```bash
    cd /path/to/Anything-3D/AnyObject3D/src
@@ -25,6 +24,7 @@ Pretrained models
    wget https://huggingface.co/jyseo/3DFuse_weights/resolve/main/models/3DFuse_sparse_depth_injector.ckpt
    ```
 
+You may also need to create a directory called checkpoints
 ## Get 3D Objects
 
 Now you can have a try to recontruct a 3D object from a single view image in the wild.

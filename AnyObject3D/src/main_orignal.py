@@ -82,55 +82,6 @@ def rec_from_image(imgname, point, keyword, random_seed):
             break
     text_prompt = keyword + ', ' + output[0] if len(text_prompt) == 0 else text_prompt
     print(keyword, ', ', text_prompt)
-    import base64
-    import requests
-    
-    # OpenAI API Key
-    api_key = ""
-    
-    # Function to encode the image
-    def encode_image(image_path):
-      with open(image_path, "rb") as image_file:
-        return base64.b64encode(image_file.read()).decode('utf-8')
-    
-    # Path to your image
-    image_path = f"./images/{imgname}_masked.jpg"
-    
-    # Getting the base64 string
-    base64_image = encode_image(image_path)
-    
-    headers = {
-      "Content-Type": "application/json",
-      "Authorization": f"Bearer {api_key}"
-    }
-    
-    payload = {
-      "model": "gpt-4-turbo",
-      "messages": [
-        {
-          "role": "user",
-          "content": [
-            {
-              "type": "text",
-                        "text": "Describe in heavy detail the main object in the image. Keep your description to 12 words. For example, if it shows a round blue ball, respond with A Round, Blue spherical ball."
-            },
-            {
-              "type": "image_url",
-              "image_url": {
-                "url": f"data:image/jpeg;base64,{base64_image}"
-              }
-            }
-          ]
-        }
-      ],
-      "max_tokens": 300
-    }
-    
-    response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
-    
-    text_prompt = response.json()['choices'][0]['message']['content']
-    text_prompt = imgname + ', ' + t    
-    print(text_prompt)
     gc.collect()
     torch.cuda.empty_cache()
     images, points = gen_pc_from_image(imgname, text_prompt, keyword, random_seed)
@@ -151,8 +102,8 @@ if __name__ == '__main__':
     opt = parser.parse_args()
     if opt.keyword is None:
         opt.keyword = opt.image
-    # import pdb 
-    # pdb.set_trace()
+    import pdb 
+    pdb.set_trace()
     rec_from_image(opt.image, opt.point_coords, opt.keyword, opt.seed)
 
 
